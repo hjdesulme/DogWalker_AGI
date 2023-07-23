@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, Suspense } from 'react'
-import { useCompletion } from 'ai/react'
+import { useCompletion, useChat } from 'ai/react'
 import { Canvas } from '@react-three/fiber'
 import { Box, Torus, Sphere, useFBX } from '@react-three/drei'
 import { Physics, RigidBody, CuboidCollider } from '@react-three/rapier'
+
+import type { FunctionCallHandler, ChatRequest } from 'ai'
 
 export interface IHistory {
 	user: string
@@ -22,6 +24,19 @@ const RightLegUpper = () => {
 const RightLegServoHub = () => {
 	const ModelSparkyLegRightHub = useFBX('/models/sparky-right-leg-servo-hub.fbx')
 	return <primitive object={ModelSparkyLegRightHub} scale={0.025} />
+}
+
+const functionCallHandler: FunctionCallHandler = async (chatMessages, functionCall) => {
+	switch (functionCall.name) {
+		default:
+			break
+	}
+
+	const functionResponse: ChatRequest = {
+		messages: [...chatMessages]
+	}
+
+	return functionResponse
 }
 
 const SimulationPreview = () => {
@@ -61,7 +76,15 @@ const SimulationPreview = () => {
 }
 
 export default function SloganGenerator() {
-	const { completion, input, handleInputChange, handleSubmit } = useCompletion({ api: '/api/completion' })
+	const {
+		messages: completion,
+		input,
+		handleInputChange,
+		handleSubmit
+	} = useChat({
+		api: '/api/completion',
+		experimental_onFunctionCall: functionCallHandler
+	})
 
 	const [history, setHistory] = useState<IHistory[]>([])
 
