@@ -3,14 +3,19 @@
 import { useState } from 'react';
 import { useCompletion } from 'ai/react';
 
+export interface IHistory {
+  user: string,
+  bot: string
+}
+
 export default function SloganGenerator() {
   const { completion, input, handleInputChange, handleSubmit } = useCompletion({api: '/api/completion'});
   
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState<IHistory[]>([]);
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSubmit();
+    handleSubmit(e);
     setHistory(prevHistory => [...prevHistory, { user: input, bot: completion }]);
     
     // send a POST request to your backend
