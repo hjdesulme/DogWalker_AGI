@@ -77,17 +77,12 @@ const SimulationPreview = () => {
 }
 
 export default function SloganGenerator() {
-	const {
-		messages: completion,
-		input,
-		handleInputChange,
-		handleSubmit
-	} = useChat({
+	const { messages, input, handleInputChange, handleSubmit } = useChat({
 		api: '/api/completion',
 		experimental_onFunctionCall: functionCallHandler
 	})
 
-	const [history, setHistory] = useState<IHistory[]>([])
+	// const [history, setHistory] = useState<IHistory[]>([])
 
 	// const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 	// 	e.preventDefault()
@@ -110,12 +105,16 @@ export default function SloganGenerator() {
 		<div className="mx-auto w-full max-w-md min-h-screen py-8 px-4 bg-gradient-to-b from-black to-white text-black flex flex-col justify-between">
 			<SimulationPreview></SimulationPreview>
 			<div className="overflow-auto">
-				{history.map((entry, index) => (
-					<div key={index} className="mb-4">
-						<div className="font-bold text-white mb-2">You: {entry.user}</div>
-						<div className="font-semibold text-white">Bot: {entry.bot}</div>
-					</div>
-				))}
+				{messages.map((m, index) => {
+					console.log({ m })
+					return (
+						<div key={index} className="mb-4">
+							<div className="font-bold text-white mb-2">
+								{m.role}: {m.function_call ? JSON.stringify(m.function_call) : m.content}
+							</div>
+						</div>
+					)
+				})}
 			</div>
 			<form onSubmit={handleSubmit} className="mt-4">
 				<input
