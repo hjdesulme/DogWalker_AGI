@@ -29,6 +29,7 @@ const RightLegServoHub = () => {
 const functionCallHandler: FunctionCallHandler = async (chatMessages, functionCall) => {
 	switch (functionCall.name) {
 		default:
+			console.log({ functionCall })
 			break
 	}
 
