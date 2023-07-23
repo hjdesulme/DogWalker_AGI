@@ -65,22 +65,22 @@ export default function SloganGenerator() {
 
 	const [history, setHistory] = useState<IHistory[]>([])
 
-	const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-		handleSubmit(e)
-		setHistory((prevHistory) => [...prevHistory, { user: input, bot: completion }])
+	// const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	// 	e.preventDefault()
+	// 	handleSubmit(e)
+	// 	setHistory((prevHistory) => [...prevHistory, { user: input, bot: completion }])
 
-		// send a POST request to your backend
-		fetch('/api/chat', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ input: input })
-		})
-			.then((response) => response.json())
-			.then((data) => console.log(data))
-	}
+	// 	// send a POST request to your backend
+	// 	fetch('/api/completion', {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			'Content-Type': 'application/json'
+	// 		},
+	// 		body: JSON.stringify({ input: input })
+	// 	})
+	// 		.then((response) => response.json())
+	// 		.then((data) => console.log(data))
+	// }
 
 	return (
 		<div className="mx-auto w-full max-w-md min-h-screen py-8 px-4 bg-gradient-to-b from-black to-white text-black flex flex-col justify-between">
@@ -93,7 +93,7 @@ export default function SloganGenerator() {
 					</div>
 				))}
 			</div>
-			<form onSubmit={handleFormSubmit} className="mt-4">
+			<form onSubmit={handleSubmit} className="mt-4">
 				<input
 					className="w-full bg-white text-black rounded p-2"
 					value={input}

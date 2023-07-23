@@ -78,7 +78,7 @@ const messages: ChatCompletionRequestMessage[] = [
 	}
 ]
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
 	// Ask OpenAI for a streaming chat completion given the prompt
 	const response = await openai.createChatCompletion({
 		model: MODEL,
@@ -87,27 +87,28 @@ export async function GET(req: Request) {
 		functions
 	})
 
-	const stream = OpenAIStream(response, {
-		async experimental_onFunctionCall(payload, createFunctionCallMessages) {
-			const { name, arguments: args } = payload
-			console.log(`function received:`, { name, args })
+	const stream = OpenAIStream(response)
+	// const stream = OpenAIStream(response, {
+	// 	async experimental_onFunctionCall(payload, createFunctionCallMessages) {
+	// 		const { name, arguments: args } = payload
+	// 		console.log(`function received:`, { name, args })
 
-			const newMessages = createFunctionCallMessages({
-				data: {
-					position: { x: 0, y: 0, z: 0 },
-					angular: { x: 0, y: 0, z: 0 },
-					acceleration: { x: 0, y: 0, z: 0 }
-				}
-			}) as ChatCompletionRequestMessage[]
+	// 		const newMessages = createFunctionCallMessages({
+	// 			data: {
+	// 				position: { x: 0, y: 0, z: 0 },
+	// 				angular: { x: 0, y: 0, z: 0 },
+	// 				acceleration: { x: 0, y: 0, z: 0 }
+	// 			}
+	// 		}) as ChatCompletionRequestMessage[]
 
-			return openai.createChatCompletion({
-				messages: [...messages, ...newMessages],
-				stream: true,
-				model: MODEL,
-				functions
-			})
-		}
-	})
+	// 		return openai.createChatCompletion({
+	// 			messages: [...messages, ...newMessages],
+	// 			stream: true,
+	// 			model: MODEL,
+	// 			functions
+	// 		})
+	// 	}
+	// })
 	// Respond with the stream
 	return new StreamingTextResponse(stream)
 }
